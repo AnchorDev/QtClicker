@@ -19,16 +19,13 @@
 #include <fstream>
 
 using namespace std;
-/*! Funkcja zaokraglajaca */
-/*!
-  Zaokragla liczbe zarobionych pieniedzy.
-*/
-int roundToInt(float value)
+
+int roundToInt(float value) //!< Funkcja zaokraglajaca 
 {
     return (int)(value + 0.5);
 }
-/*! funkcja zamieniajaca ilosc gotowki na */
-string MoneyString(int money)
+
+string MoneyString(int money)   //!< funkcja zamieniajaca ilosc gotowki z int na string
 {
     string oldMoney = to_string(money);
     string moneyString = oldMoney;
@@ -44,31 +41,34 @@ string MoneyString(int money)
     }
     return moneyString;
 }
+//! Klasa odpowiadajaca za pieniadze
 class Money
 {
 public:
-    int cash;
-    Money()
+    int cash; /*!< wartosc int odpowiadajaca za ilosc gotowki*/
+    Money() //!< funkcja przypisujaca na start 5 gotowki
     {
         cash = 5;
     }
-    void MoneyAdd(int cash_)
+
+    void MoneyAdd(int cash_) //!< funkcja odpowiedzialna za zarabianie pieniedzy
     {
         cash += cash_;
     }
 }money;
+//! Klasa odpowiadajaca za prace
 class Job {
 public:
-    string name;
+    string name;    /*!< nazwa pracy*/
     string desc;
 
-    int level;
-    int maxLevel;
-    float price;
-    float reward;
+    int level;  /*!< aktualny poziom pracy*/
+    int maxLevel;   /*!< maksymalny poziom pracy*/
+    float price;    /*!< cena zakupu lub ulepszenia pracy*/
+    float reward;   /*!< ilosc pieniedzy ktora dostaniemy*/
 
     time_t startTime;
-    float seconds;
+    float seconds;  /*!< liczba sekund jaka musimy odczekac przed uzyskaniem nagrody */
     float timeToShow;
 
     float priceStart;
@@ -100,7 +100,8 @@ public:
         rewardEnd = rewardEnd_;
         secondsEnd = secondsEnd_;
     }
-    void CheckWorkDone()
+
+    void CheckWorkDone()    //!< funkcja sprawdzajaca czy praca zostala wykonana aby dodac pieniadze
     {
         if (level >= 0)
         {
@@ -126,13 +127,14 @@ public:
         }
 
     }
-    void LevelUp()
+    void LevelUp()  //!< funkcja odpowiedzialna za zmiane ceny, nagrody i czasu oczekiwania po zakupie ulepszenia
     {
         price = priceStart + ((priceEnd - priceStart) / maxLevel) * level;
         reward = rewardStart + ((rewardEnd - rewardStart) / maxLevel) * level;
         seconds = secondsStart - ((secondsStart - secondsEnd) / maxLevel) * level;
     }
 };
+//! Klasa odpowiadajaca za przebieg gry
 class Game {
 public:
     list<Job> jobs;
@@ -146,11 +148,11 @@ public:
     Job j7 = Job("Bitcoin trader", "Kopiesz bitcoina na starym laptopie babci", 10000, 1000, 90, 60000, 25000, 75);
     Job j8 = Job("Owner of twitter", "Przywracasz wolnosc slowa", 100000, 10000, 120, 500000, 300000, 90);
 
-    bool going = true;
-    bool reset;
-    bool start;
-    string save;
-    string newGame;
+    bool going = true; /*!< bool odpowiedzialny za koniec gry */
+    bool reset; /*!<  bool odpowiedzialny za reset gry*/
+    bool start; /*!< bool odpowiedzialny za wyjscie z menu */
+    string save;    /*!< string odpowiedzialny za zapis gry */
+    string newGame; /*!< string odpowiedzialny za wczytanie poczatkowego stanu z gry */
 
     Game() {
         jobs.push_back(j1);
@@ -167,7 +169,8 @@ public:
         save = "savegame.txt";
         newGame = "newgame.txt";
     }
-    string LoadingBar(float time) {
+    string LoadingBar(float time) //!< funkcja odpowiedzialna za pasek ladowania
+    {
         string loading = "----------", hasz = "";
         int y = 0;
 
@@ -179,29 +182,7 @@ public:
         loading.replace(0, y, hasz);
         return loading;
     }
-    void Menu() {
-        cout << "IT CAPITALIST \n";
-        cout << "CASH: " << MoneyString(money.cash) << " CPU's \n\n"; //money.cash
-        for (it = jobs.begin(); it != jobs.end(); ++it)
-        {
-            cout << it->name << endl;
-            cout << it->desc << endl;
-            if (it->level != -1)
-            {
-                cout << "PRICE: " << MoneyString(roundToInt(it->price)) << endl;
-                cout << "REWARD: " << MoneyString(roundToInt(it->reward)) << endl;
-                cout << "TIME: (" << MoneyString(roundToInt(it->seconds)) << "s) [" << LoadingBar(it->timeToShow) << "]" << endl;
-                cout << "LEVEL: " << it->level << " / " << it->maxLevel << "\n\n";
-            }
-            else
-            {
-                cout << "LOCKED\n";
-                cout << "PRICE: " << MoneyString(roundToInt(it->price)) << "\n\n";
-            }
-
-        }
-    }
-    void Commands(string code)
+    void Commands(string code)  //!< funkcja odpowiedzialna za kody deweloperskie
     {
         string cheatCodes[] = { "alldone", "unlockall", "firstday", "elonmusk" };
         if (code == cheatCodes[0])
@@ -246,7 +227,7 @@ public:
             cout << "\nCheated\n" << endl;
         }
     }
-    void Buy(int number)
+    void Buy(int number) //!< funkcja odpowiedzialna za kupowanie oraz ulepszanie
     {
         int i = 1;
         for (it = jobs.begin(); it != jobs.end(); ++it)
@@ -274,7 +255,7 @@ public:
             it->CheckWorkDone();
         }
     }
-    void SaveToFile()
+    void SaveToFile() //!< funkcja odpowiedzialna za zapisywanie ulepszen oraz gotowki do pliku
     {
         ofstream myfile;
         myfile.open("savegame.txt");
@@ -287,7 +268,7 @@ public:
         }
         myfile.close();
     }
-    void ReadFromFile(string file)
+    void ReadFromFile(string file) //!< funkcja odpowiedzialna za wczytywanie ulepszen oraz gotowki do pliku
     {
         for (it = jobs.begin(); it != jobs.end(); ++it)
         {
@@ -316,7 +297,7 @@ public:
         }
         myfile.close();
     }
-    void GameOver()
+    void GameOver() //!< funkcja odpowiedzialna za komunikat o koncu gry
     {
         if (going) {
             if (money.cash >= 1000000 && start == true)
@@ -335,24 +316,22 @@ public:
 
     }
 }game;
-void QtClicker::update()
+void QtClicker::update() //!< funkcja odpowiedzialna za odswiezanie gry
 {
     game.CheckWorkDone();
-    if (!game.start) hide();
-    else unhide();
     showUI();
     game.SaveToFile();
     game.GameOver();
 
 }
-void QtClicker::init()
+void QtClicker::init() //!< funkcja odpowiedzialna za inizjalizacje gry
 {
     showUI();
     hide();
     game.ReadFromFile(game.save);
 
 }
-void QtClicker::showUI()
+void QtClicker::showUI() //!< funkcja odpowiedzialna za wyswietlanie UI
 {
     int i = 1;
     for (game.it = game.jobs.begin(); game.it != game.jobs.end(); ++game.it)
@@ -454,7 +433,7 @@ void QtClicker::showUI()
     }
     ui.label_2->setText(QString::fromStdString("Cash: " + MoneyString(money.cash) + " GPU's"));
 }
-void QtClicker::hide()
+void QtClicker::hide()  //!< funkcja odpowiedzialna za chowanie glownych elementow gry i wyswietlanie menu
 {
     game.start = false;
     ui.groupBox->setVisible(false);
@@ -471,7 +450,7 @@ void QtClicker::hide()
     setMaximumSize(400, 350);
     resize(400, 350);
 }
-void QtClicker::unhide()
+void QtClicker::unhide()    //!< funkcja odpowiedzialna za odkrywanie glownych elementow gry i chowanie menu
 {
     game.start = true;
     ui.groupBox->setVisible(true);
@@ -488,47 +467,47 @@ void QtClicker::unhide()
     setMaximumSize(10000, 10000);
     resize(650, 750);
 }
-void QtClicker::on_pushButton_clicked()
+void QtClicker::on_pushButton_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 {
     game.Buy(1);
 }
-void QtClicker::on_pushButton_3_clicked()
+void QtClicker::on_pushButton_3_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 {
     game.Buy(2);
 }
-void QtClicker::on_pushButton_5_clicked()
+void QtClicker::on_pushButton_5_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 {
     game.Buy(3);
 }
-void QtClicker::on_pushButton_7_clicked()
+void QtClicker::on_pushButton_7_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 {
     game.Buy(4);
 }
-void QtClicker::on_pushButton_9_clicked()
+void QtClicker::on_pushButton_9_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 {
     game.Buy(5);
 }
-void QtClicker::on_pushButton_11_clicked()
+void QtClicker::on_pushButton_11_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 {
     game.Buy(6);
 }
-void QtClicker::on_pushButton_13_clicked()
+void QtClicker::on_pushButton_13_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 {
     game.Buy(7);
 }
-void QtClicker::on_pushButton_15_clicked()
+void QtClicker::on_pushButton_15_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 {
     game.Buy(8);
 }
-void QtClicker::on_pushButton_10_clicked()
+void QtClicker::on_pushButton_10_clicked() //!< funkcja odpowiedzialna za wyjscie z menu po wcusnieciu przycisku
 {
     unhide();
 }
-void QtClicker::on_pushButton_12_clicked()
+void QtClicker::on_pushButton_12_clicked() //!< funkcja odpowiedzialna za wyjscie z gry po wcisnieciu przycisku
 {
     QApplication::quit();
 }
-void QtClicker::on_pushButton_17_clicked()
+void QtClicker::on_pushButton_17_clicked() //!< funkcja odpowiedzialna za reset gry po wcisnieciu przycisku
 {
     if (!game.reset)
     {
