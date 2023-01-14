@@ -17,6 +17,7 @@
 #include<string>
 #include<limits>
 #include <fstream>
+
 using namespace std;
 /*! Funkcja zaokraglajaca */
 /*!
@@ -337,6 +338,8 @@ public:
 void QtClicker::update()
 {
     game.CheckWorkDone();
+    if (!game.start) hide();
+    else unhide();
     showUI();
     game.SaveToFile();
     game.GameOver();
