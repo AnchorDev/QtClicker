@@ -19,10 +19,15 @@
 #include <fstream>
 
 using namespace std;
+/*! Funkcja zaokraglajaca */
+/*!
+  Zaokragla liczbe zarobionych pieniedzy.
+*/
 int roundToInt(float value)
 {
     return (int)(value + 0.5);
 }
+/*! funkcja zamieniajaca ilosc gotowki na */
 string MoneyString(int money)
 {
     string oldMoney = to_string(money);
@@ -343,6 +348,7 @@ void QtClicker::update()
 void QtClicker::init()
 {
     showUI();
+    hide();
     game.ReadFromFile(game.save);
 
 }
