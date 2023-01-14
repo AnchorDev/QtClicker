@@ -20,12 +20,12 @@
 
 using namespace std;
 
-int roundToInt(float value) //!< Funkcja zaokraglajaca 
+int roundToInt(float value) //! Funkcja zaokraglajaca 
 {
     return (int)(value + 0.5);
 }
 
-string MoneyString(int money)   //!< funkcja zamieniajaca ilosc gotowki z int na string
+string MoneyString(int money)   //! Funkcja zamieniajaca ilosc gotowki z int na string
 {
     string oldMoney = to_string(money);
     string moneyString = oldMoney;
@@ -46,12 +46,13 @@ class Money
 {
 public:
     int cash; /*!< wartosc int odpowiadajaca za ilosc gotowki*/
-    Money() //!< funkcja przypisujaca na start 5 gotowki
+    //! Metoda przypisujaca na start 5 gotowki 
+    Money()    
     {
         cash = 5;
     }
-
-    void MoneyAdd(int cash_) //!< funkcja odpowiedzialna za zarabianie pieniedzy
+    //! Metoda odpowiedzialna za zarabianie pieniedzy
+    void MoneyAdd(int cash_) 
     {
         cash += cash_;
     }
@@ -100,8 +101,8 @@ public:
         rewardEnd = rewardEnd_;
         secondsEnd = secondsEnd_;
     }
-
-    void CheckWorkDone()    //!< funkcja sprawdzajaca czy praca zostala wykonana aby dodac pieniadze
+    //! Metoda sprawdzajaca czy praca zostala wykonana aby dodac pieniadze
+    void CheckWorkDone()    
     {
         if (level >= 0)
         {
@@ -127,7 +128,8 @@ public:
         }
 
     }
-    void LevelUp()  //!< funkcja odpowiedzialna za zmiane ceny, nagrody i czasu oczekiwania po zakupie ulepszenia
+    //! Metoda odpowiedzialna za zmiane ceny, nagrody i czasu oczekiwania po zakupie ulepszenia
+    void LevelUp()  
     {
         price = priceStart + ((priceEnd - priceStart) / maxLevel) * level;
         reward = rewardStart + ((rewardEnd - rewardStart) / maxLevel) * level;
@@ -169,65 +171,8 @@ public:
         save = "savegame.txt";
         newGame = "newgame.txt";
     }
-    string LoadingBar(float time) //!< funkcja odpowiedzialna za pasek ladowania
-    {
-        string loading = "----------", hasz = "";
-        int y = 0;
-
-        for (int i = 1; i <= time * 10; i++)
-        {
-            y++;
-            hasz.append("#");
-        }
-        loading.replace(0, y, hasz);
-        return loading;
-    }
-    void Commands(string code)  //!< funkcja odpowiedzialna za kody deweloperskie
-    {
-        string cheatCodes[] = { "alldone", "unlockall", "firstday", "elonmusk" };
-        if (code == cheatCodes[0])
-        {
-            for (it = jobs.begin(); it != jobs.end(); ++it)
-            {
-                if (it->level == -1)
-                {
-                    it->startTime = time(NULL);
-                }
-                it->level = 20;
-                it->LevelUp();
-            }
-            cout << "\nCheated\n" << endl;
-        }
-        else if (code == cheatCodes[1])
-        {
-            for (it = jobs.begin(); it != jobs.end(); ++it)
-            {
-                if (it->level == -1)
-                {
-                    it->level = 0;
-                    it->LevelUp();
-                    it->startTime = time(NULL);
-                    cout << "\nCheated\n" << endl;
-                }
-            }
-        }
-        else if (code == cheatCodes[2])
-        {
-            if (jobs.begin()->level == -1)
-            {
-                jobs.begin()->startTime = time(NULL);
-            }
-            it->level = 20;
-            jobs.begin()->LevelUp();
-            cout << "\nCheated\n" << endl;
-        }
-        else if (code == cheatCodes[3])
-        {
-            money.MoneyAdd(100000);
-            cout << "\nCheated\n" << endl;
-        }
-    }
-    void Buy(int number) //!< funkcja odpowiedzialna za kupowanie oraz ulepszanie
+    //! Metoda odpowiedzialna za kupowanie oraz ulepszanie
+    void Buy(int number) 
     {
         int i = 1;
         for (it = jobs.begin(); it != jobs.end(); ++it)
@@ -248,6 +193,7 @@ public:
             i++;
         }
     }
+    //! Metoda sprawdzajaca czy praca zostala wykonana aby dodac pieniadze dla kazdej pracy
     void CheckWorkDone()
     {
         for (it = jobs.begin(); it != jobs.end(); ++it)
@@ -255,7 +201,8 @@ public:
             it->CheckWorkDone();
         }
     }
-    void SaveToFile() //!< funkcja odpowiedzialna za zapisywanie ulepszen oraz gotowki do pliku
+    //! Metoda odpowiedzialna za zapisywanie ulepszen oraz gotowki do pliku
+    void SaveToFile() 
     {
         ofstream myfile;
         myfile.open("savegame.txt");
@@ -268,7 +215,8 @@ public:
         }
         myfile.close();
     }
-    void ReadFromFile(string file) //!< funkcja odpowiedzialna za wczytywanie ulepszen oraz gotowki do pliku
+    //! Metoda odpowiedzialna za wczytywanie ulepszen oraz gotowki do pliku
+    void ReadFromFile(string file) 
     {
         for (it = jobs.begin(); it != jobs.end(); ++it)
         {
@@ -297,7 +245,8 @@ public:
         }
         myfile.close();
     }
-    void GameOver() //!< funkcja odpowiedzialna za komunikat o koncu gry
+    //! Metoda odpowiedzialna za komunikat o koncu gry
+    void GameOver() 
     {
         if (going) {
             if (money.cash >= 1000000 && start == true)
@@ -316,7 +265,8 @@ public:
 
     }
 }game;
-void QtClicker::update() //!< funkcja odpowiedzialna za odswiezanie gry
+//! Funkcja odpowiedzialna za odswiezanie gry
+void QtClicker::update() 
 {
     game.CheckWorkDone();
     showUI();
@@ -324,14 +274,16 @@ void QtClicker::update() //!< funkcja odpowiedzialna za odswiezanie gry
     game.GameOver();
 
 }
-void QtClicker::init() //!< funkcja odpowiedzialna za inizjalizacje gry
+//! Funkcja odpowiedzialna za inizjalizacje gry
+void QtClicker::init() 
 {
     showUI();
     hide();
     game.ReadFromFile(game.save);
 
 }
-void QtClicker::showUI() //!< funkcja odpowiedzialna za wyswietlanie UI
+//! Funkcja odpowiedzialna za wyswietlanie UI
+void QtClicker::showUI() 
 {
     int i = 1;
     for (game.it = game.jobs.begin(); game.it != game.jobs.end(); ++game.it)
@@ -433,7 +385,8 @@ void QtClicker::showUI() //!< funkcja odpowiedzialna za wyswietlanie UI
     }
     ui.label_2->setText(QString::fromStdString("Cash: " + MoneyString(money.cash) + " GPU's"));
 }
-void QtClicker::hide()  //!< funkcja odpowiedzialna za chowanie glownych elementow gry i wyswietlanie menu
+//! Funkcja odpowiedzialna za chowanie glownych elementow gry i wyswietlanie menu
+void QtClicker::hide()  
 {
     game.start = false;
     ui.groupBox->setVisible(false);
@@ -450,7 +403,8 @@ void QtClicker::hide()  //!< funkcja odpowiedzialna za chowanie glownych element
     setMaximumSize(400, 350);
     resize(400, 350);
 }
-void QtClicker::unhide()    //!< funkcja odpowiedzialna za odkrywanie glownych elementow gry i chowanie menu
+//! Funkcja odpowiedzialna za odkrywanie glownych elementow gry i chowanie menu
+void QtClicker::unhide()    
 {
     game.start = true;
     ui.groupBox->setVisible(true);
@@ -467,47 +421,58 @@ void QtClicker::unhide()    //!< funkcja odpowiedzialna za odkrywanie glownych e
     setMaximumSize(10000, 10000);
     resize(650, 750);
 }
-void QtClicker::on_pushButton_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+void QtClicker::on_pushButton_clicked() 
 {
     game.Buy(1);
 }
-void QtClicker::on_pushButton_3_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+void QtClicker::on_pushButton_3_clicked() 
 {
     game.Buy(2);
 }
-void QtClicker::on_pushButton_5_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+void QtClicker::on_pushButton_5_clicked() 
 {
     game.Buy(3);
 }
-void QtClicker::on_pushButton_7_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+void QtClicker::on_pushButton_7_clicked() 
 {
     game.Buy(4);
 }
-void QtClicker::on_pushButton_9_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+void QtClicker::on_pushButton_9_clicked() 
 {
     game.Buy(5);
 }
-void QtClicker::on_pushButton_11_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+void QtClicker::on_pushButton_11_clicked() 
 {
     game.Buy(6);
 }
-void QtClicker::on_pushButton_13_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+void QtClicker::on_pushButton_13_clicked() 
 {
     game.Buy(7);
 }
-void QtClicker::on_pushButton_15_clicked() //!< funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
+void QtClicker::on_pushButton_15_clicked() 
 {
     game.Buy(8);
 }
-void QtClicker::on_pushButton_10_clicked() //!< funkcja odpowiedzialna za wyjscie z menu po wcusnieciu przycisku
+//! Funkcja odpowiedzialna za wyjscie z menu po wcusnieciu przycisku
+void QtClicker::on_pushButton_10_clicked() 
 {
     unhide();
 }
-void QtClicker::on_pushButton_12_clicked() //!< funkcja odpowiedzialna za wyjscie z gry po wcisnieciu przycisku
+//! Funkcja odpowiedzialna za wyjscie z gry po wcisnieciu przycisku
+void QtClicker::on_pushButton_12_clicked() 
 {
     QApplication::quit();
 }
-void QtClicker::on_pushButton_17_clicked() //!< funkcja odpowiedzialna za reset gry po wcisnieciu przycisku
+//! Funkcja odpowiedzialna za reset gry po wcisnieciu przycisku
+void QtClicker::on_pushButton_17_clicked() 
 {
     if (!game.reset)
     {

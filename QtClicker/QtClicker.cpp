@@ -7,11 +7,14 @@ QtClicker::QtClicker(QWidget* parent) : QMainWindow(parent)
 {
     ui.setupUi(this);
     timer.setInterval(100);
-    timer.start(); //!< funkcja odpowiedzialna za wlaczenie timer'a
+    //! Funkcja odpowiedzialna za wlaczenie timer'a
+    timer.start(); 
     connect(&timer, SIGNAL(timeout()), this, SLOT(update()));
     QPixmap pix("logo.png");
-    ui.label->setPixmap(pix.scaled(800, 100, Qt::KeepAspectRatio)); //!< funkcja odpowiedzialna za ustawienie rozmaru loga
-    init(); //!< funkcja odpowiedzialna za inicjalizacje
+    //! Funkcja odpowiedzialna za ustawienie rozmaru loga
+    ui.label->setPixmap(pix.scaled(800, 100, Qt::KeepAspectRatio)); 
+    //! Funkcja odpowiedzialna za inicjalizacje
+    init(); 
 
 }
 QtClicker::~QtClicker()
