@@ -20,12 +20,12 @@
 
 using namespace std;
 
-int roundToInt(float value) //! Funkcja zaokraglajaca 
+int roundToInt(float value)
 {
     return (int)(value + 0.5);
 }
 
-string MoneyString(int money)   //! Funkcja zamieniajaca ilosc gotowki z int na string
+string MoneyString(int money)  
 {
     string oldMoney = to_string(money);
     string moneyString = oldMoney;
@@ -41,35 +41,31 @@ string MoneyString(int money)   //! Funkcja zamieniajaca ilosc gotowki z int na 
     }
     return moneyString;
 }
-//! Klasa odpowiadajaca za pieniadze
 class Money
 {
 public:
-    int cash; /*!< wartosc int odpowiadajaca za ilosc gotowki*/
-    //! Metoda przypisujaca na start 5 gotowki 
+    int cash;
     Money()    
     {
         cash = 5;
     }
-    //! Metoda odpowiedzialna za zarabianie pieniedzy
     void MoneyAdd(int cash_) 
     {
         cash += cash_;
     }
 }money;
-//! Klasa odpowiadajaca za prace
 class Job {
 public:
-    string name;    /*!< nazwa pracy*/
+    string name;    
     string desc;
 
-    int level;  /*!< aktualny poziom pracy*/
-    int maxLevel;   /*!< maksymalny poziom pracy*/
-    float price;    /*!< cena zakupu lub ulepszenia pracy*/
-    float reward;   /*!< ilosc pieniedzy ktora dostaniemy*/
+    int level;  
+    int maxLevel;
+    float price; 
+    float reward;   
 
     time_t startTime;
-    float seconds;  /*!< liczba sekund jaka musimy odczekac przed uzyskaniem nagrody */
+    float seconds; 
     float timeToShow;
 
     float priceStart;
@@ -101,7 +97,6 @@ public:
         rewardEnd = rewardEnd_;
         secondsEnd = secondsEnd_;
     }
-    //! Metoda sprawdzajaca czy praca zostala wykonana aby dodac pieniadze
     void CheckWorkDone()    
     {
         if (level >= 0)
@@ -128,7 +123,6 @@ public:
         }
 
     }
-    //! Metoda odpowiedzialna za zmiane ceny, nagrody i czasu oczekiwania po zakupie ulepszenia
     void LevelUp()  
     {
         price = priceStart + ((priceEnd - priceStart) / maxLevel) * level;
@@ -136,7 +130,6 @@ public:
         seconds = secondsStart - ((secondsStart - secondsEnd) / maxLevel) * level;
     }
 };
-//! Klasa odpowiadajaca za przebieg gry
 class Game {
 public:
     list<Job> jobs;
@@ -150,11 +143,11 @@ public:
     Job j7 = Job("Bitcoin trader", "Kopiesz bitcoina na starym laptopie babci", 10000, 1000, 90, 60000, 25000, 75);
     Job j8 = Job("Owner of twitter", "Przywracasz wolnosc slowa", 100000, 10000, 120, 500000, 300000, 90);
 
-    bool going = true; /*!< bool odpowiedzialny za koniec gry */
-    bool reset; /*!<  bool odpowiedzialny za reset gry*/
-    bool start; /*!< bool odpowiedzialny za wyjscie z menu */
-    string save;    /*!< string odpowiedzialny za zapis gry */
-    string newGame; /*!< string odpowiedzialny za wczytanie poczatkowego stanu z gry */
+    bool going = true;
+    bool reset; 
+    bool start;
+    string save;    
+    string newGame; 
 
     Game() {
         jobs.push_back(j1);
@@ -171,7 +164,6 @@ public:
         save = "savegame.txt";
         newGame = "newgame.txt";
     }
-    //! Metoda odpowiedzialna za kupowanie oraz ulepszanie
     void Buy(int number) 
     {
         int i = 1;
@@ -193,7 +185,6 @@ public:
             i++;
         }
     }
-    //! Metoda sprawdzajaca czy praca zostala wykonana aby dodac pieniadze dla kazdej pracy
     void CheckWorkDone()
     {
         for (it = jobs.begin(); it != jobs.end(); ++it)
@@ -201,7 +192,6 @@ public:
             it->CheckWorkDone();
         }
     }
-    //! Metoda odpowiedzialna za zapisywanie ulepszen oraz gotowki do pliku
     void SaveToFile() 
     {
         ofstream myfile;
@@ -215,7 +205,6 @@ public:
         }
         myfile.close();
     }
-    //! Metoda odpowiedzialna za wczytywanie ulepszen oraz gotowki do pliku
     void ReadFromFile(string file) 
     {
         for (it = jobs.begin(); it != jobs.end(); ++it)
@@ -245,7 +234,6 @@ public:
         }
         myfile.close();
     }
-    //! Metoda odpowiedzialna za komunikat o koncu gry
     void GameOver() 
     {
         if (going) {
@@ -265,7 +253,6 @@ public:
 
     }
 }game;
-//! Funkcja odpowiedzialna za odswiezanie gry
 void QtClicker::update() 
 {
     game.CheckWorkDone();
@@ -274,7 +261,6 @@ void QtClicker::update()
     game.GameOver();
 
 }
-//! Funkcja odpowiedzialna za inizjalizacje gry
 void QtClicker::init() 
 {
     showUI();
@@ -282,7 +268,6 @@ void QtClicker::init()
     game.ReadFromFile(game.save);
 
 }
-//! Funkcja odpowiedzialna za wyswietlanie UI
 void QtClicker::showUI() 
 {
     int i = 1;
@@ -385,7 +370,6 @@ void QtClicker::showUI()
     }
     ui.label_2->setText(QString::fromStdString("Cash: " + MoneyString(money.cash) + " GPU's"));
 }
-//! Funkcja odpowiedzialna za chowanie glownych elementow gry i wyswietlanie menu
 void QtClicker::hide()  
 {
     game.start = false;
@@ -403,7 +387,6 @@ void QtClicker::hide()
     setMaximumSize(400, 350);
     resize(400, 350);
 }
-//! Funkcja odpowiedzialna za odkrywanie glownych elementow gry i chowanie menu
 void QtClicker::unhide()    
 {
     game.start = true;
@@ -421,57 +404,46 @@ void QtClicker::unhide()
     setMaximumSize(10000, 10000);
     resize(650, 750);
 }
-//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 void QtClicker::on_pushButton_clicked() 
 {
     game.Buy(1);
 }
-//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 void QtClicker::on_pushButton_3_clicked() 
 {
     game.Buy(2);
 }
-//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 void QtClicker::on_pushButton_5_clicked() 
 {
     game.Buy(3);
 }
-//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 void QtClicker::on_pushButton_7_clicked() 
 {
     game.Buy(4);
 }
-//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 void QtClicker::on_pushButton_9_clicked() 
 {
     game.Buy(5);
 }
-//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 void QtClicker::on_pushButton_11_clicked() 
 {
     game.Buy(6);
 }
-//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 void QtClicker::on_pushButton_13_clicked() 
 {
     game.Buy(7);
 }
-//! Funkcja odpowiedzialna za zakup ulepszenia po wcisnieciu przycisku
 void QtClicker::on_pushButton_15_clicked() 
 {
     game.Buy(8);
 }
-//! Funkcja odpowiedzialna za wyjscie z menu po wcusnieciu przycisku
 void QtClicker::on_pushButton_10_clicked() 
 {
     unhide();
 }
-//! Funkcja odpowiedzialna za wyjscie z gry po wcisnieciu przycisku
 void QtClicker::on_pushButton_12_clicked() 
 {
     QApplication::quit();
 }
-//! Funkcja odpowiedzialna za reset gry po wcisnieciu przycisku
 void QtClicker::on_pushButton_17_clicked() 
 {
     if (!game.reset)
